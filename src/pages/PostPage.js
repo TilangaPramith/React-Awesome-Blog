@@ -1,8 +1,9 @@
 /* eslint-disable default-case */
 import axios from 'axios';
-import React, { useEffect, useReducer } from 'react'
+import React, { useContext, useEffect, useReducer } from 'react'
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom'
+import { ThemeContext } from '../ThemeContext';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -30,6 +31,7 @@ const reducer = (state, action) => {
 
 export default function PostPage() {
   const {postId} = useParams();
+  const {backendAPI} = useContext(ThemeContext);
   const [state, dispatch] = useReducer(reducer, {
     loading: false,
     error: '',
@@ -43,8 +45,9 @@ export default function PostPage() {
       type: 'POST_REQUEST'
     });
     try {
-      const { data } = await axios.get(`https://jsonplaceholder.typicode.com/posts/${postId}`);
-      const { data: userData } = await axios.get(`https://jsonplaceholder.typicode.com/users/${data?.userId}`);
+      console.log('postId ===> ', postId);
+      const { data } = await axios.get(`${backendAPI}/posts/${postId}`);
+      const { data: userData } = await axios.get(`${backendAPI}/users/${data?.userId}`);
       dispatch({
         type: 'POST_SUCCESS',
         payload: {...data, userData},
@@ -59,7 +62,7 @@ export default function PostPage() {
 
   useEffect(() => {
     fetchPost();
-  }, []);
+  }, [backendAPI]);
   console.log('post ===> ', post);
   return (
     <div>

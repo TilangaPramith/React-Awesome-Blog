@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable default-case */
 import axios from 'axios';
-import React, { useEffect, useReducer } from 'react'
+import React, { useContext, useEffect, useReducer } from 'react'
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { ThemeContext } from '../ThemeContext';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -60,7 +61,7 @@ export default function HomePage() {
 
   const {query, userId, ...rest} = useParams();
 
-  console.log('iviviviviv ====> ', query, rest);
+  const {backendAPI} = useContext(ThemeContext);
 
   const [state, dispatch] = useReducer(reducer, {
     loading: false,
@@ -81,8 +82,8 @@ export default function HomePage() {
     try {
       const { data } = await axios.get(
         userId 
-          ? `https://jsonplaceholder.typicode.com/posts?userId=${userId}` 
-          : 'https://jsonplaceholder.typicode.com/posts'
+          ? `${backendAPI}/posts?userId=${userId}` 
+          : `${backendAPI}/posts`
       );
       const filteredPosts = query ? data.filter((item) => 
         (item.title.indexOf(query) >= 0)
@@ -107,8 +108,8 @@ export default function HomePage() {
     try {
       const { data } = await axios.get(
         userId 
-        ? `https://jsonplaceholder.typicode.com/users/${userId}`
-        : 'https://jsonplaceholder.typicode.com/users'
+        ? `${backendAPI}/users/${userId}`
+        : `${backendAPI}/users`
       );
       dispatch({
         type: userId ? 'USER_SUCCESS' : 'USERS_SUCCESS',
@@ -125,7 +126,7 @@ export default function HomePage() {
   useEffect(() => {
     loadPosts();
     loadUsers();
-  }, [query, userId]);
+  }, [query, userId, backendAPI]);
   return (
     <div className='blog'>
       <div className='content'>
@@ -147,6 +148,7 @@ export default function HomePage() {
               <li key={post?.id}>
                 <Link to={`/post/${post?.id}`}>
                   <h2>{post?.title}</h2>
+                  <h2>{post?.id}</h2>
                 </Link>
                 <p>{post?.body}</p>
               </li>
@@ -160,7 +162,7 @@ export default function HomePage() {
           <div>Loading...</div>
         ) : errorUsers ? (
           <div>Error: {errorUsers}</div>
-        ) : posts?.length === 0 ? (
+        ) : users?.length === 0 ? (
           <div>No users found</div>
         ) : (
           userId ? (
@@ -174,7 +176,7 @@ export default function HomePage() {
             </div>
           ) : (
             <div>
-              <h2>Authors</h2>
+              {/* <h2>Authors</h2> */}
               <ul>
                 {users.map((user) => (
                   <li key={user?.id}>

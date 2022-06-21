@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { ThemeContext } from '../ThemeContext'
 
 export default function Navbar() {
-  const {theme, toggleTheme, user} = useContext(ThemeContext);
+  const {theme, toggleTheme, user, backendAPI, toggleBackendAPI} = useContext(ThemeContext);
   const history = useHistory();
   const [query, setQuery] = useState('');
   const handleSubmit = (e) => {
@@ -27,7 +27,7 @@ export default function Navbar() {
         <form onSubmit={() => handleSubmit()} >
           <input type="text" placeholder='search' name='query'
             onChange={(e) => setQuery(e.target.value)}
-          />
+          />{' '}
           <button type='submit'>Go</button>
         </form>
       </div>
@@ -42,9 +42,12 @@ export default function Navbar() {
           <NavLink to='/login'>
             Login
           </NavLink>
-        )}
+        )}{' '}
         <button onClick={() => toggleTheme()}>
-          {theme === 'light' ? 'Theme: light' : 'Theme: dark'}
+          {theme === 'light' ? 'Theme: Light' : 'Theme: Dark'}
+        </button>{' '}
+        <button onClick={toggleBackendAPI}>
+          {backendAPI === '/api' ? 'API: Real' : 'API: Mock'}
         </button>
       </div>
       {/* <div className='header-item'>

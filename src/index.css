@@ -138,3 +138,7 @@ a:hover {
 .error {
   color: #c04040;
 }
+
+.success {
+  color: green;
+}

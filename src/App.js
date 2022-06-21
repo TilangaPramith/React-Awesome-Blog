@@ -9,6 +9,8 @@ import PostPage from './pages/PostPage';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
 import PrivateRoute from './components/PrivateRoute';
+import CreatePostPage from './pages/CreatePostPage';
+import RegistrationPage from './pages/RegistrationPage';
 
 function App() {
   const {theme} = useContext(ThemeContext);
@@ -19,12 +21,19 @@ function App() {
         <Navbar />
         <div className='main'>
           <Switch>
+            <PrivateRoute
+              path='/create'
+              component={CreatePostPage}
+            ></PrivateRoute>
             <PrivateRoute 
               path='/profile' 
               component={ProfilePage}
             ></PrivateRoute>
             <Route path='/login'>
               <LoginPage />
+            </Route>
+            <Route path='/register'>
+              <RegistrationPage />
             </Route>
             <Route path='/post/:postId'>
               <PostPage />
